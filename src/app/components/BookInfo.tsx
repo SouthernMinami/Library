@@ -1,42 +1,25 @@
 'use client'
 
-import React, { useState, useEffect } from 'react';
-import FetchAPI from '../api/FetchAPI'; 
+import React from 'react';
 
 type Props = {
-    url: string;
+    data: string[] | null;
 }
 
-type BookData = {
-    [key: string]: {
-      title: string;
-      subtitle: string;
-      authors: { name: string }[];
-      cover: { medium: string };
-      number_of_pages: number;
-      publish_date: string;
-      subjects: { url: string }[];
-    };
-  };
-const BookInfo = ({ url }: Props) => {
-    const [data, setData] = useState<string[] | null>(null);
+const BookInfo = ({ data }: Props) => {
 
-    useEffect(() => {
-        FetchAPI(url).then(data => {
-            setData(data);
-        })
-    }, [url]);
 
-    if (!data) {
-        return <div>Loading...</div>;
-    }
-
+    if(data === null) return (
+        <div className='col-span-12 h-screen'>
+            <h1 className='text-4xl text-center'>NO BOOKS FOUND</h1>
+        </div>
+    );
     return (
         <div className='col-span-12'>
             {Object.keys(data).map((bookKey) => {
                 const book = data[bookKey];
                 return (
-                    <div key={bookKey} className='flex border my-20'>
+                    <div key={bookKey} className='flex border my-20 h-screen'>
                         <img src={book.cover.medium} alt={book.title} className='p-10' />
                         <div className='p-10'>
                             <h1 className='text-4xl'>{book.title}</h1>
